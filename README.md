@@ -1,10 +1,10 @@
 <div align="center">
 
-  <img src="docs/assets/logo.png" alt="logo" width="200" height="auto" />
-  <h1>Awesome Readme Template</h1>
+  <img src="https://github.com/Fr4nek/TODO-MacOS-Native/blob/main/docs/assets/logos/LOGO.jpg" alt="logo" width="200" height="auto" />
+  <h1>TODO.app</h1>
   
   <p>
-    An awesome README template for your projects! 
+    A pretty good and smooth TODO app in SwiftUI, as simple as it gets.
   </p>
   
   
@@ -16,13 +16,13 @@
 </p>
    
 <h4>
-    <a href="https://github.com/Louis3797/awesome-readme-template/">View Demo</a>
+    <a href="https://github.com/Louis3797/awesome-readme-template/">1</a>
   <span> · </span>
-    <a href="https://github.com/Louis3797/awesome-readme-template">Documentation</a>
+    <a href="https://github.com/Louis3797/awesome-readme-template">2</a>
   <span> · </span>
-    <a href="https://github.com/Louis3797/awesome-readme-template/issues/">Report Bug</a>
+    <a href="https://github.com/Louis3797/awesome-readme-template/issues/">3</a>
   <span> · </span>
-    <a href="https://github.com/Louis3797/awesome-readme-template/issues/">Request Feature</a>
+    <a href="https://github.com/Louis3797/awesome-readme-template/issues/">4</a>
   </h4>
 </div>
 

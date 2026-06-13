@@ -1,21 +1,25 @@
 {
   "images" : [
     {
+      "filename" : "LOGO_TODO_16.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "16x16"
     },
     {
+      "filename" : "LOGO_TODO_32 1.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "16x16"
     },
     {
+      "filename" : "LOGO_TODO_32.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "32x32"
     },
     {
+      "filename" : "LOGO_TODO_64.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "32x32"
@@ -45,6 +49,7 @@
       "size" : "256x256"
     },
     {
+      "filename" : "LOGO_TODO_512 1.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "512x512"
