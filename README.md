@@ -10,27 +10,33 @@
   
 <!-- Badges -->
 <p>
-  <a href="https://github.com/Louis3797/awesome-readme-template/graphs/contributors">
+  <a href="https://github.com/Fr4nek/TODO-MacOS-Native/releases/latest">
     <img src="https://img.shields.io/badge/Download-TODO.dmg-blue" alt="contributors" />
   </a>
 </p>
    
 <h4>
-    <a href="https://github.com/Louis3797/awesome-readme-template/">1</a>
+    <a href="">*</a>
   <span> · </span>
-    <a href="https://github.com/Louis3797/awesome-readme-template">2</a>
+    <a href="">*</a>
   <span> · </span>
-    <a href="https://github.com/Louis3797/awesome-readme-template/issues/">3</a>
+    <a href="">*</a>
   <span> · </span>
-    <a href="https://github.com/Louis3797/awesome-readme-template/issues/">4</a>
+    <a href="https://fr4nek.github.io/">Author</a>
   </h4>
 </div>
 
-<br />
+<br/>
 
 <div align="center"> 
   <img src="https://github.com/Fr4nek/TODO-MacOS-Native/blob/main/docs/assets/Screenshot.png" alt="screenshot" />
 </div>
 
 
+<!-- Dodam potem
 
+| Light | Dark | Glass |
+|----------|----------|----------|
+| ![Light](https://pbs.twimg.com/media/HKwvP0cbUAEOriW?format=jpg&name=large) | ![Dark](https://pbs.twimg.com/media/HKwvP0cbUAEOriW?format=jpg&name=large) | ![Glass](https://pbs.twimg.com/media/HKwvP0cbUAEOriW?format=jpg&name=large) |
+
+-->

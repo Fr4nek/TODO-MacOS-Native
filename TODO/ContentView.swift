@@ -24,12 +24,14 @@ struct ContentView: View {
         case system
         case light
         case dark
+        case glass
         var id: String { rawValue }
         var title: String {
             switch self {
-            case .system: return "Systemowy"
-            case .light: return "Jasny"
-            case .dark: return "Ciemny"
+            case .system: return "System"
+            case .light: return "Light"
+            case .dark: return "Dark"
+            case .glass: return "Glass"
             }
         }
     }
@@ -43,8 +45,8 @@ struct ContentView: View {
             _todos = State(initialValue: saved)
         } else {
             _todos = State(initialValue: [
-                TodoItem(title: "Kupić mleko"),
-                TodoItem(title: "Zrobić trening")
+                TodoItem(title: "Buy a milk"),
+                TodoItem(title: "Do workout")
             ])
         }
         if let raw = UserDefaults.standard.string(forKey: styleKey),
@@ -55,7 +57,14 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            Color.clear.background(.ultraThinMaterial)
+            Group {
+                if selectedStyle == .glass {
+                    Color.clear.background(.ultraThinMaterial)
+                } else {
+                    Color.clear
+                }
+            }
+            .ignoresSafeArea()
 
             VStack(spacing: 12) {
                 
@@ -106,6 +115,13 @@ struct ContentView: View {
                                 .foregroundColor(todo.isCompleted ? .gray : .primary)
                             Spacer()
                         }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            withAnimation {
+                                todo.isCompleted.toggle()
+                                saveTodos()
+                            }
+                        }
                         .contextMenu {
                             if todo.isCompleted {
                                 Button("Oznacz jako niezrobione", systemImage: "checkmark.circle") {
@@ -130,6 +146,7 @@ struct ContentView: View {
             case .system: return nil
             case .light: return .light
             case .dark: return .dark
+            case .glass: return nil
             }
         }())
         .toolbar {
@@ -151,6 +168,17 @@ struct ContentView: View {
             }
         }
         .frame(minWidth: 300, minHeight: 400)
+        .onChange(of: selectedStyle) { _, newValue in
+            UserDefaults.standard.set(newValue.rawValue, forKey: styleKey)
+            #if os(macOS)
+            applyGlassWindowIfNeeded()
+            #endif
+        }
+        .onAppear {
+            #if os(macOS)
+            applyGlassWindowIfNeeded()
+            #endif
+        }
     }
     
     // Funkcja dodawania
@@ -169,6 +197,81 @@ struct ContentView: View {
         }
     }
     
+    #if os(macOS)
+    private func applyGlassWindowIfNeeded() {
+        let makeBlurView: () -> NSVisualEffectView = {
+            let v = NSVisualEffectView()
+            v.material = .underWindowBackground
+            v.blendingMode = .behindWindow
+            v.state = .active
+            v.translatesAutoresizingMaskIntoConstraints = false
+            return v
+        }
+
+        for window in NSApp.windows {
+            window.titleVisibility = .hidden
+            window.titlebarAppearsTransparent = true
+
+            // Skip the Settings window; it should remain system styled
+            if window.identifier?.rawValue == "SettingsWindow" || window.title == "Ustawienia" {
+                // Also make sure it uses system defaults when Glass is active
+                window.isOpaque = true
+                window.backgroundColor = NSColor.windowBackgroundColor
+                window.styleMask.remove(.fullSizeContentView)
+                window.hasShadow = true
+                if let contentView = window.contentView {
+                    contentView.subviews
+                        .filter { $0 is NSVisualEffectView }
+                        .forEach { $0.removeFromSuperview() }
+                    contentView.wantsLayer = false
+                }
+                continue
+            }
+
+            if selectedStyle == .glass {
+                window.isOpaque = false
+                window.backgroundColor = .clear
+                window.styleMask.insert(.fullSizeContentView)
+                window.hasShadow = true
+
+                if let contentView = window.contentView {
+                    // Ensure the contentView is clear to let vibrancy show
+                    contentView.wantsLayer = true
+                    contentView.layer?.backgroundColor = NSColor.clear.cgColor
+
+                    // Insert a visual effect view behind SwiftUI content to guarantee subtle blur
+                    let existingVEV = contentView.subviews.first { $0 is NSVisualEffectView }
+                    if existingVEV == nil {
+                        let vev = makeBlurView()
+                        contentView.addSubview(vev, positioned: .below, relativeTo: contentView.subviews.first)
+                        NSLayoutConstraint.activate([
+                            vev.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+                            vev.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+                            vev.topAnchor.constraint(equalTo: contentView.topAnchor),
+                            vev.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+                        ])
+                    }
+                }
+            } else {
+                // Revert to default appearance for non-glass styles
+                window.isOpaque = true
+                window.backgroundColor = NSColor.windowBackgroundColor
+                window.styleMask.remove(.fullSizeContentView)
+                window.hasShadow = true
+
+                if let contentView = window.contentView {
+                    // Remove any inserted visual effect view we added
+                    contentView.subviews
+                        .filter { $0 is NSVisualEffectView }
+                        .forEach { $0.removeFromSuperview() }
+
+                    contentView.wantsLayer = false
+                }
+            }
+        }
+    }
+    #endif
+
     #if os(macOS)
     private func togglePin() {
         isPinned.toggle()
@@ -195,6 +298,9 @@ struct ContentView: View {
             defer: false
         )
         window.title = "Ustawienia"
+        window.identifier = NSUserInterfaceItemIdentifier("SettingsWindow")
+        window.titleVisibility = .hidden
+        window.titlebarAppearsTransparent = true
         window.isReleasedWhenClosed = false
         window.center()
         window.contentView = NSHostingView(rootView: SettingsView(selectedStyle: $selectedStyle))
@@ -208,39 +314,8 @@ struct ContentView: View {
     #endif
 }
 
-struct CircleTextField: View {
-    @Binding var text: String
-    var placeholder: String
-    var onSubmit: () -> Void
 
-    @FocusState private var isFocused: Bool
 
-    var body: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "square.and.pencil")
-                .foregroundStyle(.secondary)
-                .imageScale(.medium)
-
-            TextField(placeholder, text: $text)
-                .textFieldStyle(.plain)
-                .focused($isFocused)
-                .onSubmit(onSubmit)
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(.ultraThinMaterial)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(.quaternary, lineWidth: 1)
-        )
-        .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 2)
-        .onAppear { isFocused = true }
-        .accessibilityLabel("Input new task")
-    }
-}
 
 struct SettingsView: View {
     @Binding var selectedStyle: ContentView.AppStyle
@@ -271,3 +346,4 @@ struct SettingsView: View {
 #Preview {
     ContentView()
 }
+

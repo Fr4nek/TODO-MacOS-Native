@@ -54,5 +54,4 @@ struct CircleButton: View {
         }
     }
     .padding()
-    .previewLayout(.sizeThatFits)
 }
