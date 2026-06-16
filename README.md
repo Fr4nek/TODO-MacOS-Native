@@ -34,7 +34,7 @@
 
 
 
-
+### Styles
 | Light | Dark | Glass |
 |----------|----------|----------|
 | ![Light](https://github.com/Fr4nek/TODO-MacOS-Native/blob/main/docs/assets/screen_light.png) | ![Dark](https://github.com/Fr4nek/TODO-MacOS-Native/blob/main/docs/assets/screen_dark.png) | ![Glass](https://github.com/Fr4nek/TODO-MacOS-Native/blob/main/docs/assets/screen_glass.png) |
