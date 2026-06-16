@@ -33,3 +33,6 @@ struct CircleTextField: View {
         .accessibilityLabel("Input new task")
     }
 }
+#Preview {
+    ContentView()
+}
