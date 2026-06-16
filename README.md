@@ -37,6 +37,6 @@
 
 | Light | Dark | Glass |
 |----------|----------|----------|
-| ![Light](https://pbs.twimg.com/media/HKwvP0cbUAEOriW?format=jpg&name=large) | ![Dark](https://pbs.twimg.com/media/HKwvP0cbUAEOriW?format=jpg&name=large) | ![Glass](https://pbs.twimg.com/media/HKwvP0cbUAEOriW?format=jpg&name=large) |
+| ![Light](https://github.com/Fr4nek/TODO-MacOS-Native/blob/main/docs/assets/screen_light.png) | ![Dark](https://github.com/Fr4nek/TODO-MacOS-Native/blob/main/docs/assets/screen_dark.png) | ![Glass](https://github.com/Fr4nek/TODO-MacOS-Native/blob/main/docs/assets/screen_glass.png) |
 
 -->
