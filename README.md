@@ -28,10 +28,11 @@
 
 <br/>
 
+<!--
 <div align="center"> 
   <img src="https://github.com/Fr4nek/TODO-MacOS-Native/blob/main/docs/assets/Screenshot.png" alt="screenshot" />
 </div>
-
+ -->
 
 
 ### Styles
