@@ -19,6 +19,31 @@ struct ContentView: View {
     @State private var hoveredTodoID: UUID? = nil
     @State private var isPinned: Bool = false
     @State private var isShowingSettings: Bool = false
+    @State private var shakeOffset: CGFloat = 0
+    @State private var submitScale: CGFloat = 1
+
+    private func triggerShake() {
+        // simple two-impulse horizontal shake
+        let sequence: [CGFloat] = [6, -6, 4, -4, 2, -2, 0]
+        var delay: Double = 0
+        for step in sequence {
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                shakeOffset = step
+            }
+            delay += 0.02
+        }
+    }
+
+    private func triggerPulse() {
+        withAnimation(.spring(response: 0.22, dampingFraction: 0.72)) {
+            submitScale = 1.03
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
+            withAnimation(.spring(response: 0.26, dampingFraction: 0.8)) {
+                submitScale = 1.0
+            }
+        }
+    }
 
     enum AppStyle: String, CaseIterable, Identifiable, Codable {
         case system
@@ -69,45 +94,49 @@ struct ContentView: View {
             VStack(spacing: 12) {
                 
                 HStack {
+                    // Shake state lives in ContentView; lightweight and local to the field
                     CircleTextField(
                         text: $newTodoTitle,
                         placeholder: "New Task...",
-                        onSubmit: addTodo
+                        onSubmit: {
+                            triggerPulse()
+                            addTodo()
+                        }
                     )
+                    .scaleEffect(submitScale)
+                    .offset(x: shakeOffset)
+                    .animation(.spring(response: 0.22, dampingFraction: 0.35, blendDuration: 0.0), value: shakeOffset)
+                    .onTapGesture {
+                        // trigger a subtle shake when the field is invoked/clicked
+                        triggerShake()
+                    }
+
                 }
                 .padding(.horizontal)
                 
                 List {
                     ForEach($todos) { $todo in
                         HStack {
-                            Group {
-                                if todo.isCompleted && hoveredTodoID == todo.id {
-                                    Button(action: {
-                                        withAnimation {
-                                            if let index = todos.firstIndex(where: { $0.id == todo.id }) {
-                                                todos.remove(at: index)
-                                                saveTodos()
-                                            }
+                            Button(action: {
+                                withAnimation(.easeInOut(duration: 0.10)) {
+                                    if todo.isCompleted && hoveredTodoID == todo.id {
+                                        if let index = todos.firstIndex(where: { $0.id == todo.id }) {
+                                            todos.remove(at: index)
+                                            saveTodos()
                                         }
-                                    }) {
-                                        Image(systemName: "trash")
-                                            .foregroundColor(.red)
-                                            .transition(.scale.combined(with: .opacity))
+                                    } else {
+                                        todo.isCompleted.toggle()
+                                        saveTodos()
                                     }
-                                    .buttonStyle(.borderless)
-                                } else {
-                                    Image(systemName: todo.isCompleted ? "checkmark.circle.fill" : "circle")
-                                        .foregroundColor(todo.isCompleted ? .green : .gray)
-                                        .onTapGesture {
-                                            withAnimation {
-                                                todo.isCompleted.toggle()
-                                                saveTodos()
-                                            }
-                                        }
-                                        .transition(.scale.combined(with: .opacity))
                                 }
+                            }) {
+                                Image(systemName: (todo.isCompleted && hoveredTodoID == todo.id) ? "trash" : (todo.isCompleted ? "checkmark.circle.fill" : "circle"))
+                                    .foregroundColor((todo.isCompleted && hoveredTodoID == todo.id) ? .red : (todo.isCompleted ? .green : .gray))
                             }
-                            .animation(.easeInOut(duration: 0.18), value: todo.isCompleted && hoveredTodoID == todo.id)
+                            .buttonStyle(.borderless)
+                            .contentTransition(.symbolEffect(.replace))
+                            .animation(.easeInOut(duration: 0.10), value: (todo.isCompleted && hoveredTodoID == todo.id))
+                            .animation(.easeInOut(duration: 0.10), value: todo.isCompleted)
 
                             Text(todo.title)
                                 .padding(8)
@@ -117,7 +146,7 @@ struct ContentView: View {
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            withAnimation {
+                            withAnimation(.easeInOut(duration: 0.10)) {
                                 todo.isCompleted.toggle()
                                 saveTodos()
                             }
@@ -346,4 +375,3 @@ struct SettingsView: View {
 #Preview {
     ContentView()
 }
-

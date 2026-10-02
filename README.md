@@ -4,7 +4,7 @@
   <h1>TODO.app</h1>
   
   <p>
-    A pretty good and smooth TODO app in SwiftUI, as simple as it gets.
+    A pretty good and smooth TODO app in SwiftUI, as simple as it gets. Looks like native app by Apple.
   </p>
   
   
@@ -14,16 +14,6 @@
     <img src="https://img.shields.io/badge/Download-TODO.dmg-blue" alt="contributors" />
   </a>
 </p>
-   
-<h4>
-    <a href="">*</a>
-  <span> · </span>
-    <a href="">*</a>
-  <span> · </span>
-    <a href="">*</a>
-  <span> · </span>
-    <a href="https://fr4nek.github.io/">Author</a>
-  </h4>
 </div>
 
 <br/>
@@ -40,3 +30,7 @@
 |----------|----------|----------|
 | ![Light](https://github.com/Fr4nek/TODO-MacOS-Native/blob/main/docs/assets/screen_light.png) | ![Dark](https://github.com/Fr4nek/TODO-MacOS-Native/blob/main/docs/assets/screen_dark.png) | ![Glass](https://github.com/Fr4nek/TODO-MacOS-Native/blob/main/docs/assets/screen_glass.png) |
 
+### Features
+- Add, delate, check or undo tasks
+- 
+- 
